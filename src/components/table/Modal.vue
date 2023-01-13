@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, Ref, ref } from "vue";
 import { IMaskDirective as vIMaskDirective } from "vue-imask";
-import { Utilizer, Form } from "@/types/users/Utilizer";
+import { Utilizer, Form } from "@/types/table/Utilizer";
 
 /** Маска для ввода телефона */
 const mask = { mask: "{+7} 000 000-00-00" };
@@ -51,11 +51,13 @@ function handleForm() {
           v-i-mask-directive="mask"
           placeholder="+7 999 123-45-67"
           id="phone"
+          required
           type="text"
           v-model="form.phone"
+          maxlength="16"
         />
       </div>
-      <div class="flex justify-between gap-x-3">
+      <div v-if="allUsers.length" class="flex justify-between gap-x-3">
         <label for="chief">Начальник</label>
         <select
           name="chief"

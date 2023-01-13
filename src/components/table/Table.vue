@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { inject, Ref, ref } from "vue";
-import User from "@/components/users/User.vue";
-import Modal from "@/components/users/Modal.vue";
-import { Utilizer, Form } from "@/types/users/Utilizer";
+import User from "@/components/table/User.vue";
+import Modal from "@/components/table/Modal.vue";
+import { Utilizer, Form } from "@/types/table/Utilizer";
 
 const showModal = inject<Ref<boolean>>("showModal");
 
