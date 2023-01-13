@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject, Ref, ref } from "vue";
 import User from "@/components/users/User.vue";
-import Modal from "@/components/modal/Modal.vue";
-import { Utilizer } from "@/types/users/Utilizer";
-import { Form } from "@/types/users/Form";
+import Modal from "@/components/users/Modal.vue";
+import { Utilizer, Form } from "@/types/users/Utilizer";
 
-defineProps<{
-  /** Показывать ли модальное окна */
-  showModal: boolean;
-}>();
+const showModal = inject<Ref<boolean>>("showModal");
 
-const users = ref<Utilizer[]>([]);
+const users = ref<Utilizer[]>(
+  JSON.parse(localStorage.getItem("users") || "[]")
+);
 
 function addUser(form: Form) {
   users.value.push(form);
+  localStorage.setItem("users", JSON.stringify(users.value));
+}
+
+function sortByUserName() {
+  users.value.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function sortByUserPhone() {
+  users.value.sort((a, b) => a.phone.localeCompare(b.phone));
 }
 </script>
 
@@ -21,12 +28,27 @@ function addUser(form: Form) {
   <div
     class="flex gap-10 items-center md:justify-between md:items-start flex-col md:flex-row"
   >
-    <div class="flex flex-col border border-black w-96 shrink-0">
+    <div class="flex flex-col w-96 shrink-0 border border-black">
       <div class="flex items-center">
-        <p class="flex-[0_0_35%] border-r border-r-black text-center">Имя</p>
-        <p class="flex-[0_0_65%] text-center">Телефон</p>
+        <p
+          @click="sortByUserName"
+          class="flex-[0_0_35%] border-r border-r-black text-center cursor-pointer"
+        >
+          Имя
+        </p>
+        <p
+          @click="sortByUserPhone"
+          class="flex-[0_0_65%] text-center cursor-pointer"
+        >
+          Телефон
+        </p>
       </div>
-      <User v-for="user in users" :name="user.name" :phone="user.phone" />
+      <User
+        v-for="user in users"
+        :name="user.name"
+        :phone="user.phone"
+        :key="user.name + user.phone"
+      />
     </div>
     <Modal v-if="showModal" @save-user="addUser($event)" />
   </div>
