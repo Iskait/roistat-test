@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject, Ref, ref } from "vue";
 import { IMaskDirective as vIMaskDirective } from "vue-imask";
-import { Form } from "@/types/users/Form";
+import { Utilizer, Form } from "@/types/users/Utilizer";
 
 /** Маска для ввода телефона */
 const mask = { mask: "{+7} 000 000-00-00" };
@@ -9,15 +9,24 @@ const mask = { mask: "{+7} 000 000-00-00" };
 const form = ref<Form>({
   name: "",
   phone: "",
-  chief: [],
+  chief: null,
 });
+
+const allUsers = JSON.parse(
+  localStorage.getItem("users") || "[]"
+) as Utilizer[];
 
 const emit = defineEmits<{
   (event: "save-user", form: Form): void;
 }>();
 
+const showModal = inject<Ref<boolean>>("showModal");
+
 function handleForm() {
   emit("save-user", form.value);
+  if (showModal) {
+    showModal.value = false;
+  }
 }
 </script>
 
@@ -26,7 +35,11 @@ function handleForm() {
     class="flex flex-col p-4 gap-y-6 w-96 border border-black"
     @submit.prevent="handleForm"
   >
-    <h1>Добавление пользователя</h1>
+    <div class="flex justify-between">
+      <h1>Добавление пользователя</h1>
+      <button type="button" @click="showModal = false">X</button>
+    </div>
+
     <div class="flex flex-col gap-y-4">
       <div class="flex justify-between gap-x-3">
         <label for="name">Имя</label>
@@ -44,7 +57,21 @@ function handleForm() {
       </div>
       <div class="flex justify-between gap-x-3">
         <label for="chief">Начальник</label>
-        <input id="chief" type="text" />
+        <select
+          name="chief"
+          id="chief"
+          class="w-52"
+          @change="form.chief = +($event.target as HTMLOptionElement).value"
+        >
+          <option value="#"></option>
+          <option
+            v-for="(user, index) in allUsers"
+            :value="index"
+            :key="user.name + index"
+          >
+            {{ user.name }}
+          </option>
+        </select>
       </div>
     </div>
     <button
