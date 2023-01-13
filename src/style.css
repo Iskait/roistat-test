@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-input {
-  @apply outline-none border border-black px-2
+input, select {
+  @apply outline-none border border-black px-2 w-52
 }
