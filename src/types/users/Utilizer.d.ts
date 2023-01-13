@@ -4,3 +4,7 @@ export interface Utilizer {
   /** Телефон пользователя */
   phone: string;
 }
+
+export interface Form extends Utilizer {
+  chief: number | null;
+}
