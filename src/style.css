@@ -5,3 +5,11 @@
 input, select {
   @apply outline-none border border-black px-2 w-52
 }
+
+th, td {
+  @apply border border-black 
+}
+
+table {
+  @apply border-collapse
+}

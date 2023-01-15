@@ -3,15 +3,10 @@ export interface Utilizer {
   name: string;
   /** Телефон пользователя */
   phone: string;
+  /** ID пользователя */
+  id: string;
+  /** Начальник пользователя */
+  chief: string | null;
   /** Список подчиненных */
-  subordinates: {
-    /** Имя пользователя */
-    name: string;
-    /** Телефон пользователя */
-    phone: string;
-  }[];
-}
-
-export interface Form extends Utilizer {
-  chief: number | null;
+  subordinates: Utilizer[];
 }
