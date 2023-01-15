@@ -11,7 +11,11 @@ const users = ref<Utilizer[]>(
 );
 
 function addUser(form: Form) {
-  users.value.push(form);
+  if (form.chief === null) {
+    users.value.push(form);
+  } else {
+    users.value[form.chief].subordinates.push(form);
+  }
   localStorage.setItem("users", JSON.stringify(users.value));
 }
 
@@ -43,12 +47,15 @@ function sortByUserPhone() {
           Телефон
         </p>
       </div>
-      <User
-        v-for="user in users"
-        :name="user.name"
-        :phone="user.phone"
-        :key="user.name + user.phone"
-      />
+      <div class="flex flex-col">
+        <User
+          v-for="user in users"
+          :key="user.name + user.phone"
+          :name="user.name"
+          :phone="user.phone"
+          :subordinates="user.subordinates"
+        />
+      </div>
     </div>
     <Modal v-if="showModal" @save-user="addUser($event)" />
   </div>

@@ -10,6 +10,7 @@ const form = ref<Form>({
   name: "",
   phone: "",
   chief: null,
+  subordinates: [],
 });
 
 const allUsers = JSON.parse(

@@ -3,6 +3,13 @@ export interface Utilizer {
   name: string;
   /** Телефон пользователя */
   phone: string;
+  /** Список подчиненных */
+  subordinates: {
+    /** Имя пользователя */
+    name: string;
+    /** Телефон пользователя */
+    phone: string;
+  }[];
 }
 
 export interface Form extends Utilizer {
