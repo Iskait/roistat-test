@@ -1,21 +1,28 @@
 <script setup lang="ts">
-defineProps<{
-  /** Имя пользователя */
-  name: string;
-  /** Телефон пользователя */
-  phone: string;
-}>();
+import type { Utilizer } from "@/types/table/Utilizer";
+
+defineProps<Utilizer>();
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="flex items-center">
-      <p class="flex-[0_0_35%] border-t border-r border-black text-center p-2">
+  <table class="flex flex-col">
+    <tr class="flex items-center">
+      <td class="flex-[0_0_35%] text-center p-2">
         {{ name }}
-      </p>
-      <p class="flex-[0_0_65%] text-center border-t border-black p-2">
+      </td>
+      <td class="flex-[0_0_65%] text-center p-2">
         {{ phone }}
-      </p>
-    </div>
-  </div>
+      </td>
+    </tr>
+    <User
+      v-for="user in subordinates"
+      class="translate-x-1"
+      :name="user.name"
+      :phone="user.phone"
+      :key="user.id"
+      :id="user.id"
+      :subordinates="user.subordinates"
+      :chief="user.chief"
+    />
+  </table>
 </template>

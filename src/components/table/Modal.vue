@@ -1,29 +1,50 @@
 <script setup lang="ts">
 import { inject, Ref, ref } from "vue";
 import { IMaskDirective as vIMaskDirective } from "vue-imask";
-import { Utilizer, Form } from "@/types/table/Utilizer";
+import { Utilizer } from "@/types/table/Utilizer";
+import { v4 as uuidv4 } from "uuid";
 
 /** Маска для ввода телефона */
 const mask = { mask: "{+7} 000 000-00-00" };
 
-const form = ref<Form>({
+const form = ref<Utilizer>({
   name: "",
   phone: "",
+  id: uuidv4(),
   chief: null,
+  subordinates: [],
 });
 
-const allUsers = JSON.parse(
-  localStorage.getItem("users") || "[]"
-) as Utilizer[];
+const users = inject<Ref<Utilizer[]>>("users");
 
-const emit = defineEmits<{
-  (event: "save-user", form: Form): void;
-}>();
+function flatten(users: Utilizer[] | undefined): Utilizer[] {
+  return (
+    users?.reduce(
+      (acc, val) =>
+        acc.concat(
+          val.subordinates.length ? [val, ...flatten(val.subordinates)] : val
+        ),
+      [] as Utilizer[]
+    ) || []
+  );
+}
+
+const allUsers = flatten(users?.value);
 
 const showModal = inject<Ref<boolean>>("showModal");
 
+function addUser(form: Utilizer) {
+  if (form.chief === null) {
+    users?.value.push(form);
+  } else {
+    const selectedChief = allUsers.find((user) => user.id === form.chief);
+    selectedChief?.subordinates.push(form);
+  }
+  localStorage.setItem("users", JSON.stringify(users?.value));
+}
+
 function handleForm() {
-  emit("save-user", form.value);
+  addUser(form.value);
   if (showModal) {
     showModal.value = false;
   }
@@ -54,23 +75,20 @@ function handleForm() {
           required
           type="text"
           v-model="form.phone"
+          minlength="16"
           maxlength="16"
         />
       </div>
-      <div v-if="allUsers.length" class="flex justify-between gap-x-3">
+      <div v-if="allUsers?.length" class="flex justify-between gap-x-3">
         <label for="chief">Начальник</label>
         <select
           name="chief"
           id="chief"
           class="w-52"
-          @change="form.chief = +($event.target as HTMLOptionElement).value"
+          @change="form.chief = ($event.target as HTMLOptionElement).value"
         >
           <option value="#"></option>
-          <option
-            v-for="(user, index) in allUsers"
-            :value="index"
-            :key="user.name + index"
-          >
+          <option v-for="user in allUsers" :value="user.id" :key="user.id">
             {{ user.name }}
           </option>
         </select>
