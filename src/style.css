@@ -7,9 +7,5 @@ input, select {
 }
 
 th, td {
-  @apply border border-black 
-}
-
-table {
-  @apply border-collapse
+  @apply border border-black border-collapse
 }

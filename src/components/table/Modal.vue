@@ -4,7 +4,6 @@ import { IMaskDirective as vIMaskDirective } from "vue-imask";
 import { Utilizer } from "@/types/table/Utilizer";
 import { v4 as uuidv4 } from "uuid";
 
-/** Маска для ввода телефона */
 const mask = { mask: "{+7} 000 000-00-00" };
 
 const form = ref<Utilizer>({
@@ -14,6 +13,8 @@ const form = ref<Utilizer>({
   chief: null,
   subordinates: [],
 });
+
+const showModal = inject<Ref<boolean>>("showModal");
 
 const users = inject<Ref<Utilizer[]>>("users");
 
@@ -30,8 +31,6 @@ function flatten(users: Utilizer[] | undefined): Utilizer[] {
 }
 
 const allUsers = flatten(users?.value);
-
-const showModal = inject<Ref<boolean>>("showModal");
 
 function addUser(form: Utilizer) {
   if (form.chief === null) {
@@ -66,6 +65,7 @@ function handleForm() {
         <label for="name">Имя</label>
         <input required id="name" type="text" v-model="form.name" />
       </div>
+
       <div class="flex justify-between gap-x-3">
         <label for="phone">Телефон</label>
         <input
@@ -79,6 +79,7 @@ function handleForm() {
           maxlength="16"
         />
       </div>
+
       <div v-if="allUsers?.length" class="flex justify-between gap-x-3">
         <label for="chief">Начальник</label>
         <select
@@ -94,6 +95,7 @@ function handleForm() {
         </select>
       </div>
     </div>
+
     <button
       type="submit"
       class="border border-black rounded-full px-3 py-1 self-start"

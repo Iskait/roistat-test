@@ -50,6 +50,7 @@ function sortByUserPhone(users: Utilizer[]) {
           Телефон
         </th>
       </tr>
+
       <User
         v-for="user in users"
         :key="user.id"
@@ -60,6 +61,7 @@ function sortByUserPhone(users: Utilizer[]) {
         :chief="user.chief"
       />
     </table>
+
     <Modal v-if="showModal" />
   </div>
 </template>

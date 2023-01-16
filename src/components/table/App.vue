@@ -15,6 +15,7 @@ provide("showModal", showModal);
     >
       {{ showModal ? "Отменить" : "Добавить" }}
     </button>
+
     <Table :show-modal="showModal" />
   </div>
 </template>

@@ -14,15 +14,17 @@ defineProps<Utilizer>();
         {{ phone }}
       </td>
     </tr>
-    <User
-      v-for="user in subordinates"
-      class="translate-x-1"
-      :name="user.name"
-      :phone="user.phone"
-      :key="user.id"
-      :id="user.id"
-      :subordinates="user.subordinates"
-      :chief="user.chief"
-    />
+
+    <div class="translate-x-1">
+      <User
+        v-for="user in subordinates"
+        :key="user.id"
+        :name="user.name"
+        :phone="user.phone"
+        :chief="user.chief"
+        :id="user.id"
+        :subordinates="user.subordinates"
+      />
+    </div>
   </table>
 </template>
